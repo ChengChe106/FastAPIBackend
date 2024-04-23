@@ -3,20 +3,20 @@
 # @Software: PyCharm
 import uuid
 
-from pydantic import UUID4, BaseModel
+from pydantic import UUID4, BaseModel, Field
 
 
 class ItemBase(BaseModel):
-    id: UUID4 = uuid.uuid4()
+    id: UUID4 = Field(default_factory=uuid.uuid4)
+
+
+class ItemCreate(BaseModel):
     title: str
     description: str | None = None
-
-
-class ItemCreate(ItemBase):
     pass
 
 
-class Item(ItemBase):
+class Item(ItemBase, ItemCreate):
     owner_id: UUID4
 
     class Config:
@@ -24,11 +24,12 @@ class Item(ItemBase):
 
 
 class UserBase(BaseModel):
-    id: UUID4 = uuid.uuid4()
+    id: UUID4 = Field(default_factory=uuid.uuid4)
     username: str
 
 
-class UserCreate(UserBase):
+class UserCreate(BaseModel):
+    username: str
     password: str
 
 

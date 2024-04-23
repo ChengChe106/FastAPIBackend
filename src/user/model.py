@@ -3,7 +3,7 @@
 # @Software: PyCharm
 
 
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
+from sqlalchemy import Boolean, Column, ForeignKey, String
 from sqlalchemy import Uuid as UUID
 from sqlalchemy.orm import relationship
 

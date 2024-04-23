@@ -8,7 +8,8 @@ from sqlalchemy.orm import Session
 
 from src.database import engine
 from src.dependency import get_db
-from src.user import crud, model, schema
+
+from . import crud, model, schema
 
 model.Base.metadata.create_all(bind=engine)
 
