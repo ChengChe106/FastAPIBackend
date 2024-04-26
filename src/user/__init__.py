@@ -5,3 +5,4 @@ from .crud import *
 from .model import *
 from .router import *
 from .schema import *
+from .dependency import *

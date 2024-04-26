@@ -7,8 +7,18 @@ from uuid import UUID
 from sqlalchemy.orm import Session
 
 from src.auth.jwt import pwd_context
-
 from . import model, schema
+
+
+def create_user(db: Session, user: schema.UserCreate):
+    hashed_password = pwd_context.hash(user.password)
+    db_user = model.User(
+        id=uuid.uuid4(), username=user.username, hashed_password=hashed_password
+    )
+    db.add(db_user)
+    db.commit()
+    db.refresh(db_user)
+    return db_user
 
 
 def get_user(db: Session, user_id: UUID):
@@ -21,17 +31,6 @@ def get_user_by_username(db: Session, username: str):
 
 def get_users(db: Session, skip: int = 0, limit: int = 100):
     return db.query(model.User).offset(skip).limit(limit).all()
-
-
-def create_user(db: Session, user: schema.UserCreate, user_id=uuid.uuid4()):
-    hashed_password = pwd_context.hash(user.password)
-    db_user = model.User(
-        id=user_id, username=user.username, hashed_password=hashed_password
-    )
-    db.add(db_user)
-    db.commit()
-    db.refresh(db_user)
-    return db_user
 
 
 def get_items(db: Session, skip: int = 0, limit: int = 100):
