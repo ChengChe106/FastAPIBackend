@@ -2,12 +2,15 @@
 # @Author : 车城
 # @Software: PyCharm
 
+from typing import List
 
-from sqlalchemy import Boolean, Column, ForeignKey, String
+from sqlalchemy import Boolean, Column, ForeignKey, String, Table, Integer
 from sqlalchemy import Uuid as UUID
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, Mapped
 
+# from src.auth.model import Permission
 from src.database import Base
+
 
 
 class User(Base):
@@ -20,6 +23,9 @@ class User(Base):
     is_superuser = Column(Boolean, nullable=False, default=False)
 
     items = relationship("Item", back_populates="owner")
+    permissions: Mapped[List['Permission']] = relationship(
+        secondary='permission_user_association_table', back_populates="users"
+    )
 
 
 class Item(Base):
