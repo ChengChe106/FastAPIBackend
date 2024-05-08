@@ -4,13 +4,11 @@
 
 from typing import List
 
-from sqlalchemy import Boolean, Column, ForeignKey, String, Table, Integer
+from sqlalchemy import Boolean, Column, ForeignKey, String
 from sqlalchemy import Uuid as UUID
 from sqlalchemy.orm import relationship, Mapped
 
-# from src.auth.model import Permission
 from src.database import Base
-
 
 
 class User(Base):

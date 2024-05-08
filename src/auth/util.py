@@ -1,5 +1,5 @@
-from typing import Union
 from datetime import datetime, timedelta, timezone
+from typing import Union
 
 from jose import jwt
 from sqlalchemy.orm import Session
@@ -7,18 +7,21 @@ from sqlalchemy.orm import Session
 import src.user as user_module
 from .jwt import ALGORITHM, SECRET_KEY, pwd_context
 
+
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
 
+
 def authenticate_user(db: Session, username: str, password: str):
-    user = user_module.crud.get_user_by_username(db, username)
+    user_obj = user_module.crud.get_user_by_username(db, username)
     # 转为schema.User对象
-    user = user_module.schema.UserInDB(**user.__dict__)
+    user = user_module.schema.UserInDB(**user_obj.__dict__)
     if not user:
         return False
-    if not verify_password(password, user.hashed_password):
+    if not verify_password(password, user_obj.hashed_password):
         return False
-    return user
+    return user_obj
+
 
 def create_access_token(data: dict, expires_delta: Union[timedelta, None] = None):
     to_encode = data.copy()

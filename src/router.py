@@ -3,11 +3,10 @@
 # @Software: PyCharm
 
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter
 
-from src.user import get_current_user
-from src.user import user_router
 from src.auth import auth_router
+from src.user import user_router
 
 api_router = APIRouter()
 

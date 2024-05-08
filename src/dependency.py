@@ -2,7 +2,6 @@
 # @Author : 车城
 # @Software: PyCharm
 from src.database import SessionLocal
-from fastapi.security import OAuth2PasswordBearer
 
 
 def get_db():
@@ -11,4 +10,3 @@ def get_db():
         yield db
     finally:
         db.close()
-

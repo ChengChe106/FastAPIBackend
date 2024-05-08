@@ -1,14 +1,11 @@
 from typing import List
 
-from sqlalchemy import Boolean, Column, ForeignKey, String, Table, Integer
-from sqlalchemy import Uuid as UUID
+from sqlalchemy import Column, ForeignKey, String, Table, Integer
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import relationship
 
-from src.user.model import User
 from src.database import Base
-
-
+from src.user.model import User
 
 permission_user_association_table = Table(
     "permission_user_association_table",
@@ -16,6 +13,7 @@ permission_user_association_table = Table(
     Column("permission_id", ForeignKey("permission.id")),
     Column("user_id", ForeignKey("user.id")),
 )
+
 
 class Permission(Base):
     __tablename__ = "permission"

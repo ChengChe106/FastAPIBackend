@@ -8,7 +8,6 @@ from sqlalchemy.orm import Session
 
 from src.database import engine
 from src.dependency import get_db
-
 from . import crud, model, schema
 from .dependency import get_current_active_user, get_current_user
 
@@ -24,22 +23,26 @@ def create_user(user: schema.UserCreate, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="username already registered")
     return crud.create_user(db=db, user=user)
 
+
 @user_router.get("/me", response_model=schema.User)
 async def read_user_me(current_user: schema.User = Depends(get_current_user)):
     return current_user
 
-@user_router.get("/list", response_model=list[schema.User],dependencies=[Security(get_current_active_user, scopes=["user_view"])])
+
+@user_router.get("/list", response_model=list[schema.User],
+                 dependencies=[Security(get_current_active_user, scopes=["user_view"])])
 def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     users = crud.get_users(db, skip=skip, limit=limit)
     return users
 
-@user_router.get("/users/{user_id}", response_model=schema.User,dependencies=[Security(get_current_active_user, scopes=["user_view"])])
+
+@user_router.get("/users/{user_id}", response_model=schema.User,
+                 dependencies=[Security(get_current_active_user, scopes=["user_view"])])
 def read_user(user_id: uuid.UUID, db: Session = Depends(get_db)):
     db_user = crud.get_user(db, user_id=user_id)
     if db_user is None:
         raise HTTPException(status_code=404, detail="User not found")
     return db_user
-
 
 # @user_router.post("/users/{user_id}/items/", response_model=schema.Item)
 # def create_item_for_user(

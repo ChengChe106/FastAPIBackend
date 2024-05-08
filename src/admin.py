@@ -1,10 +1,9 @@
+from fastapi import FastAPI
+from sqladmin import Admin
 from sqladmin import ModelView
 
-from src.user.model import User
-
-from sqladmin import Admin
-from fastapi import FastAPI
 from src.database import engine
+from src.user.model import User
 
 
 class UserAdmin(ModelView, model=User):
