@@ -13,6 +13,7 @@ from src.database import Base
 
 class User(Base):
     __tablename__ = "user"
+
     # id 为uuid类型
     id = Column(UUID, primary_key=True)
     username = Column(String, unique=True, index=True)
@@ -21,9 +22,17 @@ class User(Base):
     is_superuser = Column(Boolean, nullable=False, default=False)
 
     items = relationship("Item", back_populates="owner")
+
     permissions: Mapped[List['Permission']] = relationship(
         secondary='permission_user_association_table', back_populates="users"
     )
+
+    permission_groups: Mapped[List['PermissionGroup']] = relationship(
+        secondary='permission_group_user_association_table', back_populates="users"
+    )
+
+    def __repr__(self):
+        return f"<User( username = {self.username} )>"
 
 
 class Item(Base):

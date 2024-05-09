@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from sqladmin import Admin
 from sqladmin import ModelView
 
+from src.admin.AuthenticationBackend import authentication_backend
 from src.auth.model import Permission
 from src.database import engine
 from src.user.model import User
@@ -16,7 +17,7 @@ class PermissionAdmin(ModelView, model=Permission):
 
 
 def init_admin(app: FastAPI):
-    admin = Admin(app, engine, title="Admin", templates_dir="Admin/templates")
+    admin = Admin(app, engine, authentication_backend=authentication_backend, title="Admin", templates_dir="Admin/templates")
     admin.add_view(UserAdmin)
     admin.add_view(PermissionAdmin)
     return admin

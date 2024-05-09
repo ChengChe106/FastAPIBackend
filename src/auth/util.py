@@ -15,8 +15,8 @@ def verify_password(plain_password, hashed_password):
 def authenticate_user(db: Session, username: str, password: str):
     user_obj = user_module.crud.get_user_by_username(db, username)
     # 转为schema.User对象
-    user = user_module.schema.UserInDB(**user_obj.__dict__)
-    if not user:
+    # user = user_module.schema.UserInDB(**user_obj.__dict__)
+    if not user_obj:
         return False
     if not verify_password(password, user_obj.hashed_password):
         return False

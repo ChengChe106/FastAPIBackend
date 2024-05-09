@@ -1,6 +1,6 @@
 from fastapi import Depends, FastAPI
 
-from .admin import init_admin
+from .admin.admin import init_admin
 from .dependency import get_db
 from .router import api_router
 
