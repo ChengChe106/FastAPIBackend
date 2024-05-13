@@ -6,8 +6,9 @@ from sqlalchemy import Column, ForeignKey, String, Table, Integer
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import relationship
 
-from src.user.model import User
+# from src.user.model import User
 from src.database import Base
+from src.user import User
 
 permission_user_association_table = Table(
     "permission_user_association_table",
@@ -21,8 +22,8 @@ class Permission(Base):
     __tablename__ = "permission"
 
     id = Column(Integer, primary_key=True)
-    key = Column(String, unique=True, index=True)
-    description = Column(String, unique=True, index=True)
+    key = Column(String(20), unique=True, index=True)
+    description = Column(String(20), unique=True, index=True)
 
     users: Mapped[List['User']] = relationship(
         secondary='permission_user_association_table',
@@ -54,7 +55,7 @@ class PermissionGroup(Base):
     __tablename__ = "permission_group"
 
     id = Column(Integer, primary_key=True)
-    name = Column(String, unique=True, index=True)
+    name = Column(String(20), unique=True, index=True)
 
     users: Mapped[List['User']] = relationship(
         secondary='permission_group_user_association_table',

@@ -16,8 +16,8 @@ class User(Base):
 
     # id 为uuid类型
     id = Column(UUID, primary_key=True)
-    username = Column(String, unique=True, index=True)
-    hashed_password = Column(String)
+    username = Column(String(20), unique=True, index=True)
+    hashed_password = Column(String(200))
     is_active = Column(Boolean, nullable=False, default=True)
     is_superuser = Column(Boolean, nullable=False, default=False)
 
@@ -39,8 +39,8 @@ class Item(Base):
     __tablename__ = "item"
 
     id = Column(UUID, primary_key=True)
-    title = Column(String, index=True)
-    description = Column(String, index=True)
+    title = Column(String(10), index=True)
+    description = Column(String(200), index=True)
     owner_id = Column(UUID, ForeignKey("user.id"))
 
     owner = relationship("User", back_populates="items")

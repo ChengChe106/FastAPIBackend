@@ -1,12 +1,10 @@
 from fastapi import Depends, FastAPI
 
-from .admin.admin import init_admin
-from .dependency import get_db
-from .router import api_router
+from . import get_db, init_admin, api_router
 
 app = FastAPI(dependencies=[Depends(get_db)])
 
-admin = init_admin(app)
+Admin = init_admin(app)
 
 app.include_router(
     api_router,

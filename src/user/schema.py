@@ -24,7 +24,7 @@ class Item(ItemBase, ItemCreate):
 
 
 class UserBase(BaseModel):
-    id: UUID4 = Field(default_factory=uuid.uuid4)
+    id: UUID4
     username: str
 
 

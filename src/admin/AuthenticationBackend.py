@@ -2,18 +2,20 @@ from fastapi.security import OAuth2PasswordRequestForm, SecurityScopes
 from sqladmin.authentication import AuthenticationBackend
 from starlette.requests import Request
 
-from src import login_for_access_token, get_db, SessionLocal, Token, get_current_user_nodeps
+from src import  get_db
+from src.auth import Token, login_for_access_token
+from src.user import get_current_user_nodeps
 
 
 class AdminAuth(AuthenticationBackend):
     async def login(self, request: Request) -> bool:
         form = await request.form()
         username, password = form["username"], form["password"]
-        form =OAuth2PasswordRequestForm(username=username, password=password)
+        form = OAuth2PasswordRequestForm(username=username, password=password)
         db_gen = get_db()  # 创建生成器
         db = next(db_gen)  # 获取数据库会话
         try:
-            token:Token = await login_for_access_token(form, db)
+            token: Token = await login_for_access_token(form, db)
 
             # Validate username/password credentials
             # And update session
@@ -22,8 +24,6 @@ class AdminAuth(AuthenticationBackend):
 
         finally:
             next(db_gen, None)  # 继续执行生成器直至完成，触发 finally 块
-
-
 
     async def logout(self, request: Request) -> bool:
         # Usually you'd want to just clear the session
@@ -40,7 +40,7 @@ class AdminAuth(AuthenticationBackend):
         db = next(db_gen)  # 获取数据库会话
 
         try:
-            user=await get_current_user_nodeps(SecurityScopes(),token=token, db=db)
+            user = await get_current_user_nodeps(SecurityScopes(), token=token, db=db)
 
             if user.is_active and user.is_superuser:
                 return True
@@ -51,5 +51,4 @@ class AdminAuth(AuthenticationBackend):
             next(db_gen, None)  # 继续执行生成器直至完成，触发 finally 块
 
 
-
-authentication_backend = AdminAuth(secret_key="...")
+authentication_backend = AdminAuth(secret_key="")

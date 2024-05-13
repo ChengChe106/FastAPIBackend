@@ -4,7 +4,7 @@ from jose import JWTError, jwt
 from pydantic import ValidationError
 from sqlalchemy.orm import Session
 
-from src.auth.dependency import oauth2_scheme
+from src.auth import oauth2_scheme
 from src.auth.jwt import ALGORITHM, SECRET_KEY
 from src.auth.schema import TokenData
 from src.dependency import get_db
