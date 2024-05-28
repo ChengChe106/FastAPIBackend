@@ -24,8 +24,10 @@ async def login_for_access_token(
         raise HTTPException(status_code=400, detail="Incorrect username or password")
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
 
-    # scopes应根据用户或用户组的权限来定，从数据库中获取
+    # scopes应根据用户的权限来定，从数据库中获取
     scopes = [permission.key for permission in user.permissions]
+    # scopes应根据用户组的权限来定，从数据库中获取
+    scopes += [permission.key for permission_group in user.permission_groups for permission in permission_group.permissions]
 
     access_token = create_access_token(
         data={"sub": user.username, "scopes": scopes},

@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session
 from src.database import engine
 from src.dependency import get_db
 from . import crud, model, schema
-from .dependency import get_current_active_user, get_current_user
+from .dependency import get_current_active_user, get_current_user,  require_permission
 
 model.Base.metadata.create_all(bind=engine)
 
@@ -25,6 +25,7 @@ def create_user(user: schema.UserCreate, db: Session = Depends(get_db)):
 
 
 @user_router.get("/me", response_model=schema.User)
+@require_permission("user_view")
 async def read_user_me(current_user: schema.User = Depends(get_current_user)):
     return current_user
 
