@@ -2,7 +2,7 @@ from fastapi.security import OAuth2PasswordRequestForm, SecurityScopes
 from sqladmin.authentication import AuthenticationBackend
 from starlette.requests import Request
 
-from src import  get_db
+from src import get_db
 from src.auth import Token, login_for_access_token
 from src.user import get_current_user_nodeps
 
@@ -40,7 +40,12 @@ class AdminAuth(AuthenticationBackend):
         db = next(db_gen)  # 获取数据库会话
 
         try:
-            user = await get_current_user_nodeps(SecurityScopes(), token=token, db=db)
+            try:
+                user = await get_current_user_nodeps(
+                    SecurityScopes(), token=token, db=db
+                )
+            except:
+                return False
 
             if user.is_active and user.is_superuser:
                 return True

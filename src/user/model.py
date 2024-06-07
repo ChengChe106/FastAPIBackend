@@ -6,9 +6,10 @@ from typing import List
 
 from sqlalchemy import Boolean, Column, ForeignKey, String
 from sqlalchemy import Uuid as UUID
-from sqlalchemy.orm import relationship, Mapped
+from sqlalchemy.orm import Mapped, relationship
 
 from src.database import Base
+
 
 class User(Base):
     __tablename__ = "user"
@@ -22,16 +23,16 @@ class User(Base):
 
     items = relationship("Item", back_populates="owner")
 
-    permissions: Mapped[List['Permission']] = relationship(
-        secondary='permission_user_association_table', back_populates="users"
+    permissions: Mapped[List["Permission"]] = relationship(
+        secondary="permission_user_association_table", back_populates="users"
     )
 
-    permission_groups: Mapped[List['PermissionGroup']] = relationship(
-        secondary='permission_group_user_association_table', back_populates="users"
+    permission_groups: Mapped[List["PermissionGroup"]] = relationship(
+        secondary="permission_group_user_association_table", back_populates="users"
     )
 
-    def __repr__(self):
-        return f"<User( username = {self.username} )>"
+    # def __repr__(self):
+    #     return f"<User( username = {self.username} )>"
 
 
 class Item(Base):

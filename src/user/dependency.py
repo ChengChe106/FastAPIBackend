@@ -14,8 +14,11 @@ from src.user import crud, schema
 from src.user.model import User
 
 
-async def get_current_user(security_scopes: SecurityScopes, token: str = Depends(oauth2_scheme),
-                           db: Session = Depends(get_db)):
+async def get_current_user(
+    security_scopes: SecurityScopes,
+    token: str = Depends(oauth2_scheme),
+    db: Session = Depends(get_db),
+):
     if security_scopes.scopes:
         authenticate_value = f'Bearer scope="{security_scopes.scope_str}"'
     else:
@@ -47,10 +50,9 @@ async def get_current_user(security_scopes: SecurityScopes, token: str = Depends
     return user
 
 
-
-
-async def get_current_user_nodeps(security_scopes: SecurityScopes, token: str,
-                           db: Session):
+async def get_current_user_nodeps(
+    security_scopes: SecurityScopes, token: str, db: Session
+):
     if security_scopes.scopes:
         authenticate_value = f'Bearer scope="{security_scopes.scope_str}"'
     else:
@@ -60,6 +62,7 @@ async def get_current_user_nodeps(security_scopes: SecurityScopes, token: str,
         detail="Could not validate credentials",
         headers={"WWW-Authenticate": authenticate_value},
     )
+
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         username: str = payload.get("sub")
@@ -85,7 +88,7 @@ async def get_current_user_nodeps(security_scopes: SecurityScopes, token: str,
 
 
 async def get_current_active_user(
-        current_user: User = Depends(get_current_user),
+    current_user: User = Depends(get_current_user),
 ):
     if not current_user.is_active:
         raise HTTPException(status_code=400, detail="Inactive user")
@@ -93,26 +96,30 @@ async def get_current_active_user(
 
 
 def check_permission(
-        current_user: User = Depends(get_current_user),
+    current_user: User = Depends(get_current_user),
 ):
     if not current_user.is_active:
         raise HTTPException(status_code=400, detail="Inactive user")
     return current_user
 
+
 from functools import wraps
+
+
 # 创建一个装饰器来处理权限检查
 def require_permission(required_permission: str):
     def decorator(func):
         @wraps(func)
-        async def wrapper( *args, **kwargs):
-            current_user=kwargs.get('current_user')
+        async def wrapper(*args, **kwargs):
+            current_user = kwargs.get("current_user")
 
             if not current_user:
                 raise HTTPException(status_code=401, detail="Unauthorized")
 
             permissions = {permission.key for permission in current_user.permissions}
             permissions.update(
-                permission.key for permission_group in current_user.permission_groups
+                permission.key
+                for permission_group in current_user.permission_groups
                 for permission in permission_group.permissions
             )
 
